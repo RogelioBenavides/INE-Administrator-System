@@ -7,18 +7,3 @@
   height: 100vh;
   margin: 0;
 }
-
-.logIn {
-  background-color: white;
-  text-align: center;
-  padding: 20px 60px;
-}
-
-.logIn h1{
-  margin-bottom: 0;
-  font-size: 3em;
-}
-
-.primary:hover {
-  background: white;
-}

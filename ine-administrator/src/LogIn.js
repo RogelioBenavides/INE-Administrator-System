@@ -30,7 +30,6 @@ const LogIn = () => {
     const handleLogIn = (user) => {
         sessionStorage.setItem("isLoggedIn", true);
         sessionStorage.setItem("username", user);
-        console.log("Hello There");
     }
 
     return (
@@ -45,12 +44,12 @@ const LogIn = () => {
                                     <PersonIcon />
                                 </InputAdornment>
                             ),
-                            style: { fontSize: 30, marginTop: 20 },
+                            style: { fontSize: 30, marginTop: 20, width: 250, margin: '20px auto 0' },
                         }}
-                        fullWidth
                         placeholder="Usuario"
                         variant="standard"
                         margin="normal"
+                        fullWidth
                         value={username}
                         onChange={(event) => setUsername(event.target.value)}
                     />
@@ -72,9 +71,8 @@ const LogIn = () => {
                                     </IconButton>
                                 </InputAdornment>
                             ),
-                            style: { fontSize: 30 },
+                            style: { fontSize: 30, width: 250 },
                         }}
-                        fullWidth
                         placeholder="Contraseña"
                         variant="standard"
                         margin="normal"

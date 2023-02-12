@@ -1,7 +1,18 @@
-.card{
-    border-radius: 20px;
+.card2 {
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+.logIn {
+    background-color: white;
+    text-align: center;
+    padding: 20px 50px;
+    border-radius: 20px;
+}
+
+.logIn h1{
+    margin: 20px 0 0 0;
+    font-size: 3em;
+  }

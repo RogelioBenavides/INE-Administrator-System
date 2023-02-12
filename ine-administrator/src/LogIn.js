@@ -9,9 +9,10 @@ import LockIcon from "@mui/icons-material/Lock";
 import { useState } from 'react'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import LoggedIn from './Log/LoggedIn'
 
 
-const LogIn = (props) => {
+const LogIn = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -20,15 +21,22 @@ const LogIn = (props) => {
         setShowPassword(!showPassword);
     };
 
-    const handleLogIn = (event) => {
-        event.preventDefault();
-        props.onSubmit(username, password);
+    const logCredentials = (event) => {
+        if (username === "Roger" && password === "123") {
+          handleLogIn(username);
+        }
+    };
+
+    const handleLogIn = (user) => {
+        sessionStorage.setItem("isLoggedIn", true);
+        sessionStorage.setItem("username", user);
+        console.log("Hello There");
     }
 
     return (
         <div className="background">
             <Card className="logIn">
-                <form onSubmit={handleLogIn}>
+                <form onSubmit={logCredentials}>
                     <h1>Inicio de Sesión</h1>
                     <TextField
                         InputProps={{
@@ -78,6 +86,7 @@ const LogIn = (props) => {
                     <PrimaryButton message='Iniciar Sesión' />
                 </form>
             </Card>
+            <LoggedIn isLoggedIn={sessionStorage.getItem("isLoggedIn")}/>
         </div>
     );
 }

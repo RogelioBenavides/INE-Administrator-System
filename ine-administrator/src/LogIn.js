@@ -22,8 +22,15 @@ const LogIn = () => {
     };
 
     const logCredentials = (event) => {
-        if (username === "Roger" && password === "123") {
-          handleLogIn(username);
+        var i;
+        for (i = 0; i < 3; i++) {
+            if (username === "Roger" && password === "123") {
+                handleLogIn(username);
+                i = 4;
+            }
+        }
+        if(i === 3) {
+            //Desplegar aviso: "Favor de consultar al administrador del sistema.";
         }
     };
 

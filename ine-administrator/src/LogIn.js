@@ -22,7 +22,7 @@ const LogIn = () => {
     };
 
     const logCredentials = (event) => {
-        var i;
+        let i;
         for (i = 0; i < 3; i++) {
             if (username === "Roger" && password === "123") {
                 handleLogIn(username);

@@ -1,13 +1,11 @@
-import logo from './img/logo.png';
+import NavBar from './UI/NavBar'
 import Option from './UI/Option';
 import SVG from './SVG';
 
 const Main = () => {
     return (
         <div>
-            <nav className='navbar-ine'>
-                <img className='logo' src={logo} alt='Logo Votaciones' />
-            </nav>
+            <NavBar />
             <div className='container-fluid'>
                 <div className='row'>
                     <div className='col-lg-6'>

@@ -6,41 +6,37 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import LoggedIn from "./Log/LoggedIn";
 
-const LogIn = (props) => {
+const LogIn = ({ logCredentials, logInMessage }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  let i;
+
+  const errorMessage = {
+    color: 'red',
+    margin: '10px 0 0',
+  };
+
+  useEffect(() => {
+    console.log(logInMessage);
+  }, [logInMessage]);
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const logCredentials = (event) => {
+  const log = (event) => {
     event.preventDefault();
-    if (username === "Roger" && password === "123") {
-      handleLogIn(username);
-      i = 4;
-    }
-    if (i === 3) {
-      //Desplegar aviso: "Favor de consultar al administrador del sistema.";
-    }
-  };
-
-  const handleLogIn = (user) => {
-    sessionStorage.setItem("isLoggedIn", true);
-    sessionStorage.setItem("username", user);
+    logCredentials(username, password);
   };
 
   return (
     <div className="background">
       <Card className="logIn">
-        <form onSubmit={logCredentials}>
+        <form onSubmit={log}>
           <h1>Inicio de Sesión</h1>
           <TextField
             InputProps={{
@@ -90,11 +86,10 @@ const LogIn = (props) => {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
-          <br />
+          <p style={errorMessage}>{logInMessage}</p>
           <PrimaryButton message="Iniciar Sesión" />
         </form>
       </Card>
-      <LoggedIn isLoggedIn={sessionStorage.getItem("isLoggedIn")} />
     </div>
   );
 };

@@ -1,0 +1,230 @@
+Why is my code not redirecting to my Main component after i put the right credentials:
+
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import LogIn from "./LogIn";
+import Main from "./Main";
+import Restricted from "./Log/Restricted"
+import Protected from "./Log/Protected";
+import ProtectedRestricted from './Log/ProtectedRestricted';
+import { useState } from 'react';
+
+const App = () => {
+  sessionStorage.setItem("logInTries", 0);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    sessionStorage.getItem('isLoggedIn') === 'true'
+  );
+  const [isRestricted, setIsRestricted] = useState(
+    sessionStorage.getItem('isRestricted') === 'true'
+  );
+  const [loginTries, setLoginTries] = useState(
+    parseInt(sessionStorage.getItem('logInTries'), 10) || 0
+  );
+  const [logInMessage, setLoginMessage] = useState('');
+
+  const handleLogIn = (user) => {
+    console.log("Ya estoy harto");
+    sessionStorage.setItem("isLoggedIn", true);
+    sessionStorage.setItem("username", user);
+    sessionStorage.setItem("isRestricted", false);
+    setIsLoggedIn(true);
+  };
+
+  const logCredentials = (username, password) => {
+    if (username === "Roger" && password === "123") {
+      sessionStorage.setItem("logInTries", 0);
+      handleLogIn(username);
+    } else {
+      setLoginMessage("Usuario y/o contraseña incorrecta\n");
+      const tries = loginTries + 1;
+      setLoginTries(tries);
+      if (tries >= 3) {
+        sessionStorage.setItem('isRestricted', true);
+        setIsRestricted(true);
+      }
+    }
+  };
+
+  if (isRestricted) {
+    return <Restricted />;
+  }
+  
+  if(isLoggedIn){
+    return <Main />;
+  }
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={
+          <ProtectedRestricted>
+            <Protected>
+            {isLoggedIn ? <Main /> : <Navigate to="/login" />}
+            </Protected>
+          </ProtectedRestricted>
+        } />
+        <Route path="/login" element={<LogIn logCredentials={logCredentials} loginMessage={logInMessage} />} />
+        <Route path="/restricted" element={<Restricted />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default App;
+
+
+
+
+
+import { Navigate } from 'react-router-dom'
+function Protected({ children }) {
+  if (!(sessionStorage.getItem("isLoggedIn") === 'true')) {
+    return <Navigate to="/login" replace />
+  }
+  return children;
+}
+export default Protected;
+
+import { Navigate } from 'react-router-dom'
+function ProtectedRestricted({ children }) {
+  if (sessionStorage.getItem("isRestricted") === 'true') {
+    return <Navigate to="/restricted" replace />
+  }
+  return children;
+}
+export default ProtectedRestricted;
+
+import fuera from "../img/fuera.jpg"
+
+const Restricted = () => {
+    return (
+        <div><img src={fuera} alt='Hello'/></div>
+    );
+}
+
+export default Restricted;
+
+import TextField from "@mui/material/TextField";
+import Card from "./UI/Card";
+import PrimaryButton from "./UI/PrimaryButton";
+import "./App.css";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import PersonIcon from "@mui/icons-material/Person";
+import LockIcon from "@mui/icons-material/Lock";
+import { useState } from "react";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
+const LogIn = ({logCredentials, logInMessage}) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const log = (event) => {
+    event.preventDefault();
+    logCredentials(username, password);
+  };
+
+  return (
+    <div className="background">
+      <Card className="logIn">
+        <form onSubmit={log}>
+          <h1>Inicio de Sesión</h1>
+          <TextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PersonIcon />
+                </InputAdornment>
+              ),
+              style: {
+                fontSize: 30,
+                marginTop: 20,
+                width: 250,
+                margin: "20px auto 0",
+              },
+            }}
+            placeholder="Usuario"
+            variant="standard"
+            margin="normal"
+            fullWidth
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+          />
+          <br />
+          <TextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+              style: { fontSize: 30, width: 250 },
+            }}
+            placeholder="Contraseña"
+            variant="standard"
+            margin="normal"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+          <p>{logInMessage}</p>
+          <PrimaryButton message="Iniciar Sesión" />
+        </form>
+      </Card>
+    </div>
+  );
+};
+
+export default LogIn;
+
+import { useState } from 'react'
+
+const PrimaryButton = (props) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isActive, setActive] = useState(false);
+  const primaryButtonStyles = {
+    fontFamily: "Arial",
+    fontStyle: "normal",
+    color: "#FFFFFF",
+    fontWeight: 700,
+    fontSize: 30,
+    background: isHovered ? "#A31464" : "#D14995",
+    boxShadow:
+      "0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 5px 4px rgba(255, 255, 255, 0.25)",
+    borderRadius: 42.5,
+    borderWidth: 0,
+    transform: isActive ? "translateY(1px)" : "translateY(0px)",
+    padding: "20px 30px",
+    margin: "40px 0",
+  };
+  return (
+    <button
+      style={primaryButtonStyles}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onMouseDown={() => setActive(true)}
+      onMouseUp={() => setActive(false)}
+      type='submit'
+    >
+      {props.message}
+    </button>
+  );
+};
+
+export default PrimaryButton;

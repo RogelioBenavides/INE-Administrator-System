@@ -16,7 +16,7 @@ const PrimaryButton = (props) => {
     borderWidth: 0,
     transform: isActive ? "translateY(1px)" : "translateY(0px)",
     padding: "20px 30px",
-    margin: "40px 0",
+    margin: "20px 0 40px",
   };
   return (
     <button
@@ -25,6 +25,7 @@ const PrimaryButton = (props) => {
       onMouseLeave={() => setIsHovered(false)}
       onMouseDown={() => setActive(true)}
       onMouseUp={() => setActive(false)}
+      type='submit'
     >
       {props.message}
     </button>

@@ -4,6 +4,8 @@ import Main from "./Main";
 import Protected from "./Log/Protected";
 
 const App = () => {
+  const logInTries = 0;
+
   const handleLogIn = (user) => {
     sessionStorage.setItem("isLoggedIn", true);
     sessionStorage.setItem("username", user);
@@ -12,6 +14,12 @@ const App = () => {
   const logCredentials = (username, password) => {
     if (username === "Roger" && password === "HelloThere") {
       handleLogIn(username);
+      logInTries = 0;
+    } else{
+      logInTries++;
+      if(logInTries == 3){
+        alert("Haz alcanzado el máximo de intentos");
+      }
     }
   };
 

@@ -9,11 +9,22 @@ import LockIcon from "@mui/icons-material/Lock";
 import { useState, useEffect } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Navigate } from "react-router-dom";
 
-const LogIn = ({ logCredentials, logInMessage }) => {
+const LogIn = () => {
+  console.log(sessionStorage.getItem("isLoggedIn"));
+
+  const [loginTries, setLoginTries] = useState(
+    parseInt(sessionStorage.getItem('logInTries'), 10) || 0
+  );
+
+  const [logInMessage, setLoginMessage] = useState('');
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const [redirect, setRedirect] = useState(null);
 
   const errorMessage = {
     color: 'red',
@@ -21,22 +32,44 @@ const LogIn = ({ logCredentials, logInMessage }) => {
   };
 
   useEffect(() => {
-    console.log(logInMessage);
   }, [logInMessage]);
+
+  const handleLogIn = (user) => {
+    sessionStorage.setItem("isLoggedIn", true);
+    sessionStorage.setItem("username", user);
+    sessionStorage.setItem("isRestricted", false);
+  };
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const log = (event) => {
+  const logCredentials = (event) => {
     event.preventDefault();
-    logCredentials(username, password);
+    if (username === "Roger" && password === "123") {
+      setLoginMessage('');
+      sessionStorage.setItem("logInTries", 0);
+      handleLogIn(username);
+      setRedirect('/');
+    } else {
+      const tries = loginTries + 1;
+      setLoginTries(tries);
+      if (tries >= 3) {
+        sessionStorage.setItem('isRestricted', true);
+        setRedirect('/restricted')
+      }
+      setLoginMessage("Usuario y/o contraseña incorrecta\n");
+    }
   };
+
+  if(redirect){
+    return <Navigate to={redirect} replace/>
+  }
 
   return (
     <div className="background">
       <Card className="logIn">
-        <form onSubmit={log}>
+        <form onSubmit={logCredentials}>
           <h1>Inicio de Sesión</h1>
           <TextField
             InputProps={{

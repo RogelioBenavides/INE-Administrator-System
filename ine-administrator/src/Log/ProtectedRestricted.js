@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom'
-function ProtectedRestricted({ children }) {
+const ProtectedRestricted = ({ children }) => {
   if (sessionStorage.getItem("isRestricted") === 'true') {
     return <Navigate to="/restricted" replace />
   }

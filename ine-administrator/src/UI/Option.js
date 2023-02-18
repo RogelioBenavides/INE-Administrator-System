@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
-const Option = (props) => {
+
+const Option = ({ route, children }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isActive, setActive] = useState(false);
 
@@ -24,12 +26,14 @@ const Option = (props) => {
     };
 
     return (
-        <div style={optionStyles}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onMouseDown={() => setActive(true)}
-            onMouseUp={() => setActive(false)}
-            >{props.children}</div>
+        <Link to={route} style={{"textDecoration":"none", "color": "#000000"}}>
+            <div style={optionStyles}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                onMouseDown={() => setActive(true)}
+                onMouseUp={() => setActive(false)}
+            >{children}</div>
+        </Link>
     );
 }
 

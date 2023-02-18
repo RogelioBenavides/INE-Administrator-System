@@ -4,6 +4,7 @@ import Restricted from "./Log/Restricted"
 import Reset from "./Menu/Reset";
 import LogIn from "./LogIn";
 import Main from "./Menu/Main";
+import ProtectedRestricted from './Log/ProtectedRestricted';
 
 const App = () => {
   if (!sessionStorage.getItem("logInTries")) {
@@ -18,11 +19,15 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<Protected />}>
-          <Route path="/" element={<Main />} />
-          <Route path="/reset" element={<Reset />} />
+        <Route element={<ProtectedRestricted/>}>
+          <Route path="/login" element={<LogIn />} />
+          <Route element={<Protected />}>
+            <Route path="/" element={<Main />} />
+            <Route path="/reset" element={<Reset />} />
+          </Route>
+        <Route/>
+
         </Route>
-        <Route path="/login" element={<LogIn />} />
         <Route path="/restricted" element={<Restricted />} />
       </Routes>
     </BrowserRouter>

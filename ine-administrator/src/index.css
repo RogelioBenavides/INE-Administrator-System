@@ -15,8 +15,10 @@ code {
 .navbar-ine {
   background-color: #D14995;
   padding: 10px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .logo{
-  height: 60px;
+  height: 40px;
 }

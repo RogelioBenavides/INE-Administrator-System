@@ -5,6 +5,9 @@ import Reset from "./Menu/Reset";
 import LogIn from "./LogIn";
 import Main from "./Menu/Main";
 import ProtectedRestricted from './Log/ProtectedRestricted';
+import Candidates from './Menu/Candidates';
+import Presidents from './Menu/Presidents';
+import DateAndTime from './Menu/DateAndTime';
 
 const App = () => {
   if (!sessionStorage.getItem("logInTries")) {
@@ -24,6 +27,9 @@ const App = () => {
           <Route element={<Protected />}>
             <Route path="/" element={<Main />} />
             <Route path="/reset" element={<Reset />} />
+            <Route path="/candidates" element={<Candidates />} />
+            <Route path="/presidents" element={<Presidents />} />
+            <Route path="/date&time" element={<DateAndTime />} />
           </Route>
         <Route/>
 

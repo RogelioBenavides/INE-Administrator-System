@@ -1,8 +1,7 @@
-
 import NavBar from "../UI/NavBar";
 
 const Reset = () =>{
-    return <NavBar />
+    return <NavBar activeReset = 'true'/>
 }
 
 export default Reset;

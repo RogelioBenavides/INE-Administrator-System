@@ -22,3 +22,13 @@ code {
 .logo{
   height: 40px;
 }
+
+.table-head{
+  background-color: #D9D9D9;
+}
+
+.rounded-table{
+  border-radius: 100px;
+  border-width: 3px;
+  box-shadow: 0px 4px 25px 4px rgba(0, 0, 0, 0.27);
+}

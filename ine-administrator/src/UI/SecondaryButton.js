@@ -1,25 +1,28 @@
 import { useState } from 'react'
 
-const PrimaryButton = (props) => {
+const SecondaryButton = (props) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isActive, setActive] = useState(false);
-    const primaryButtonStyles = {
+    const secondaryButtonStyles = {
         fontFamily: "Arial",
         fontStyle: "normal",
-        color: "#FFFFFF",
+        color: isHovered ? "#FFFFFF" : "#000000",
         fontWeight: 700,
         fontSize: 30,
-        background: isHovered ? "#A31464" : "#D14995",
+        background: isHovered ? "#D14995" : "#FFFFFF",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 5px 4px rgba(255, 255, 255, 0.25)",
         borderRadius: 50,
-        borderWidth: 0,
+        borderWidth: "5px",
+        borderStyle: "solid",
+        borderColor: isHovered ? "transparent" : "#D14995",
+        boxSizing: "border-box",
         transform: isActive ? "translateY(1px)" : "translateY(0px)",
         padding: "20px 30px",
         margin: "0 20px",
     };
     return (
         <button
-            style={primaryButtonStyles}
+            style={secondaryButtonStyles}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onMouseDown={() => setActive(true)}
@@ -30,4 +33,4 @@ const PrimaryButton = (props) => {
     );
 };
 
-export default PrimaryButton;
+export default SecondaryButton;

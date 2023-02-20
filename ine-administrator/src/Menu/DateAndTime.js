@@ -1,7 +1,9 @@
 import NavBar from "../UI/NavBar";
 
 const DateAndTime = () =>{
-    return <NavBar activeDate = 'true'/>
+    return (
+        <NavBar activeDate = 'true'/>
+    );
 }
 
 export default DateAndTime;

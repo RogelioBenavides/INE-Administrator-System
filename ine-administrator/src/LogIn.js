@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import Card from "./UI/Card";
-import PrimaryButton from "./UI/PrimaryButton";
+import SubmitButton from "./UI/SubmitButton";
 import "./App.css";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -12,8 +12,6 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Navigate } from "react-router-dom";
 
 const LogIn = () => {
-  console.log(sessionStorage.getItem("isLoggedIn"));
-
   const [loginTries, setLoginTries] = useState(
     parseInt(sessionStorage.getItem('logInTries'), 10) || 0
   );
@@ -120,7 +118,7 @@ const LogIn = () => {
             onChange={(event) => setPassword(event.target.value)}
           />
           <p style={errorMessage}>{logInMessage}</p>
-          <PrimaryButton message="Iniciar Sesión" />
+          <SubmitButton message="Iniciar Sesión" />
         </form>
       </Card>
     </div>

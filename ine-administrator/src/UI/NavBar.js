@@ -12,7 +12,7 @@ const NavBar = ({ activeReset, activeCandidates, activeUsers, activeDate }) => {
             return { "color": "white", "fontWeight":"400", "margin": "0 20px", "textAlign":"center"}
     }
     return (
-        <Navbar className="navbar-ine" expand="md" sticky='top'>
+        <Navbar className="navbar-ine" expand="md" sticky='top' style={{"margin": "0 0 20px"}}>
             <Container>
                 <Navbar.Brand href="/">
                     <Image

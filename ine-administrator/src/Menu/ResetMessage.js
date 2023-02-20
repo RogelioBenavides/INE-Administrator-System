@@ -1,5 +1,6 @@
 import PrimaryButton from "../UI/PrimaryButton";
 import SecondaryButton from "../UI/SecondaryButton";
+import { Container, Row, Col } from "react-bootstrap";
 
 const ResetMessage = (props) => {
     const messageStyle = {
@@ -15,15 +16,22 @@ const ResetMessage = (props) => {
         justifyContent: "center",
         flexDirection: "column",
         borderRadius: "50px",
+        maxWidth: "90%"
     }
     return (
-        <div style={messageStyle}>
-            <h1>{props.children}</h1>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                <SecondaryButton message="Cancelar" onClick={props.onClick}></SecondaryButton>
-                <PrimaryButton message="Confirmar" onClick={props.onClick}></PrimaryButton>
-            </div>
-        </div>
+        <Container style={messageStyle}>
+            <Row>
+                <h1>{props.children}</h1>
+            </Row>
+            <Row>
+                <Col md={6} className='d-flex flex-row mb-3 align-items-center justify-content-center'>
+                    <SecondaryButton message="Cancelar" onClick={props.onClick}></SecondaryButton>
+                </Col>
+                <Col md={6} className='d-flex flex-row mb-3 align-items-center justify-content-center'>
+                    <PrimaryButton message="Confirmar" onClick={props.onClick}></PrimaryButton>
+                </Col>
+            </Row>
+        </Container>
     );
 }
 

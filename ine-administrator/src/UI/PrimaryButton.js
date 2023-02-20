@@ -8,14 +8,13 @@ const PrimaryButton = (props) => {
         fontStyle: "normal",
         color: "#FFFFFF",
         fontWeight: 700,
-        fontSize: 30,
+        fontSize: 20,
         background: isHovered ? "#A31464" : "#D14995",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 5px 4px rgba(255, 255, 255, 0.25)",
         borderRadius: 50,
         borderWidth: 0,
         transform: isActive ? "translateY(1px)" : "translateY(0px)",
         padding: "20px 30px",
-        margin: "0 20px",
     };
     return (
         <button

@@ -16,12 +16,12 @@ const ResetMessage = (props) => {
         justifyContent: "center",
         flexDirection: "column",
         borderRadius: "50px",
-        maxWidth: "90%"
+        maxWidth: "70%"
     }
     return (
         <Container style={messageStyle}>
-            <Row>
-                <h1>{props.children}</h1>
+            <Row style={{margin: "0 0 20px"}}>
+                {props.children}
             </Row>
             <Row>
                 <Col md={6} className='d-flex flex-row mb-3 align-items-center justify-content-center'>

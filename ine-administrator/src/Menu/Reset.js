@@ -24,7 +24,7 @@ const Reset = () =>{
                 </Row>
                 <BallotTable/>
             </Container>
-            {showResetBallots ? <ResetMessage onClick={handleButtonClick}><p style={{textAlign: "center"}}>Seguro que quieres resetear los votos de <strong>todas</strong> las urnas?</p></ResetMessage> : null}
+            {showResetBallots ? <ResetMessage onClick={handleButtonClick}><h1 style={{textAlign: "center"}}>Seguro que quieres resetear los votos de <strong>todas</strong> las urnas?</h1></ResetMessage> : null}
         </div>
     ); 
     

@@ -14,15 +14,11 @@ const RepublicList = (props) => {
         borderRadius: "50px",
         maxWidth: "70%"
     }
-
     const [selectedOption, setSelectedOption] = useState(props.data[0].id);
-    const options = props.data.map((estado) => ({
-        id: estado.id,
-        city: estado.city,
-    }));
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
+        props.onChildStateChange(selectedOption);
     }
 
     return (
@@ -34,7 +30,7 @@ const RepublicList = (props) => {
                 <Row>
                     <Col>
                         <Form.Select id="select-options" value={selectedOption} onChange={handleOptionChange}>
-                            {options.map((option) => (
+                            {props.data.map((option) => (
                                 <option key={option.id} value={option.id}>{option.city}</option>
                             ))}
                         </Form.Select>

@@ -18,7 +18,7 @@ const RepublicList = (props) => {
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
-        props.onChildStateChange(selectedOption);
+        props.onChildStateChange(event.target.value);
     }
 
     return (

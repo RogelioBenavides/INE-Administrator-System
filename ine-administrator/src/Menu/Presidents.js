@@ -3,9 +3,65 @@ import RepublicList from "./RepublicList";
 import { useState } from "react";
 import PresidentList from "./PresidentList";
 
+class Presidente {
+  constructor(length) {
+    this.length = length;
+    this.charset =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+    this.charset2 =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  }
+
+  generador(stateCode, cantPresidentes) {
+    const users = [];
+
+    for (let i = cantPresidentes; i > 0; i--) {
+      let password = "",
+        usuario = "";
+
+      for (let j = 0; j < this.length; j++) {
+        password += this.charset.charAt(
+          Math.floor(Math.random() * this.charset.length)
+        );
+      }
+
+      for (let j = 0; j < 10; j++) {
+        usuario += this.charset2.charAt(
+          Math.floor(Math.random() * this.charset2.length)
+        );
+      }
+
+      if (this.validacion(password)) {
+        users.push({
+          code: stateCode + i,
+          user: usuario,
+          password: password,
+        });
+      }
+    }
+
+    return users;
+  }
+
+  validacion(password) {
+    if (
+      !/[A-Z]/.test(password) ||
+      !/[a-z]/.test(password) ||
+      !/\d/.test(password) ||
+      !/[\W_]/.test(password)
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+}
+
 const Presidents = () => {
   const [showPresidents, setShowPresidents] = useState(false);
   const [option, setOption] = useState(1);
+  const [presidents, setPresidents] = useState();
+  const PresidentGenerator = new Presidente(12);
 
   function handleChildStateChange(childState) {
     setOption(childState);
@@ -13,6 +69,8 @@ const Presidents = () => {
 
   function submitedForm(event) {
     event.preventDefault();
+    console.log(estados[option-1].code);
+    setPresidents(PresidentGenerator.generador(estados[option-1].code, estados[option-1].quantity))
     setShowPresidents(true);
   }
 
@@ -51,8 +109,6 @@ const Presidents = () => {
     { id: 32, code: "ZAC", city: "Zacatecas", quantity: 3739 },
   ];
 
-  const presidents = [{ code: "NL124", user: "H323J@dfio}fds", password: "Dfds3ds/fdhow33"}, { code: "NL125", user: "fshJFdsjsd9e//sds", password: "EUdsfouds33w.ds/ajs"}];
-
   return (
     <div>
       <NavBar activeUsers="true" />
@@ -61,11 +117,11 @@ const Presidents = () => {
       </h1>
       <RepublicList
         data={estados}
-        onChildStateChange={handleChildStateChange}
         onClick={submitedForm}
+        onChildStateChange={handleChildStateChange}
       />
       {showPresidents ? (
-        <PresidentList data={presidents} option={option}></PresidentList>
+        <PresidentList data={presidents}></PresidentList>
       ) : null}
     </div>
   );

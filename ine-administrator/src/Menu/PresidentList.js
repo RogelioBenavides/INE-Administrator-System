@@ -1,7 +1,9 @@
 import Table from 'react-bootstrap/Table';
 
 const PresidentList = (props) => {
+    // Se crea una constante "rows" que mapea los datos del componente padre
     const rows = props.data.map((item, index) => {
+        // Se retorna una fila con los valores del item actual
         return (
             <tr key={index}>
                 <td>{item.code}</td>
@@ -10,6 +12,7 @@ const PresidentList = (props) => {
             </tr>
         );
     });
+    // Se retorna una tabla con los datos
     return (
         <Table striped hover bordered responsive className='rounded-4' style={{width: "80%", margin: "30px auto"}}>
             <thead>
@@ -26,4 +29,5 @@ const PresidentList = (props) => {
     );
 }
 
+// Se exporta el componente como un módulo para su uso en otros componentes
 export default PresidentList;

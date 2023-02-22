@@ -1,3 +1,4 @@
+// Formato para imágenes SVG
 const SVG = (props) => {
     const svgStyles = {"margin":"10px","height":"100px","width":"100px"};
     return(

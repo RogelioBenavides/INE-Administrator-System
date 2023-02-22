@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { useState } from "react";
 
 const RepublicList = (props) => {
+    // Estilo para el contenedor
     const messageStyle = {
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 5px 4px rgba(255, 255, 255, 0.25)",
         backgroundColor: "#E9E9E9",
@@ -14,8 +15,10 @@ const RepublicList = (props) => {
         borderRadius: "50px",
         maxWidth: "70%"
     }
+    // Estado para el estado seleccionado
     const [selectedOption, setSelectedOption] = useState(props.data[0].id);
 
+    // Función para manejar el cambio en la selección de estado
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
         props.onChildStateChange(event.target.value);
@@ -24,11 +27,13 @@ const RepublicList = (props) => {
     return (
         <Container style={messageStyle}>
             <Row style={{ margin: "0 0 20px" }}>
+                {/* Título */}
                 <h3>Selecciona un estado de la república</h3>
             </Row>
             <Form>
                 <Row>
                     <Col>
+                        {/* Selección de estados */}
                         <Form.Select id="select-options" value={selectedOption} onChange={handleOptionChange}>
                             {props.data.map((option) => (
                                 <option key={option.id} value={option.id}>{option.city}</option>
@@ -38,6 +43,7 @@ const RepublicList = (props) => {
                 </Row>
                 <Row style={{ marginTop: "20px" }}>
                     <Col className="d-flex justify-content-center">
+                        {/* Botón de confirmación */}
                         <PrimaryButton message="Confirmar" onClick={props.onClick}></PrimaryButton>
                     </Col>
                 </Row>
@@ -46,4 +52,5 @@ const RepublicList = (props) => {
     );
 }
 
+// Exportar el componente
 export default RepublicList;

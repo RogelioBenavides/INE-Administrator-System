@@ -1,3 +1,4 @@
+// Importar componentes y dependencias necesarias
 import TextField from "@mui/material/TextField";
 import Card from "./UI/Card";
 import SubmitButton from "./UI/SubmitButton";
@@ -12,64 +13,70 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Navigate } from "react-router-dom";
 
 const LogIn = () => {
+  // Estados locales
   const [loginTries, setLoginTries] = useState(
-    parseInt(sessionStorage.getItem('logInTries'), 10) || 0
+    parseInt(sessionStorage.getItem("logInTries"), 10) || 0
   );
-
-  const [logInMessage, setLoginMessage] = useState('');
-
+  const [logInMessage, setLoginMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const [redirect, setRedirect] = useState(null);
 
+  // Estilo CSS para el mensaje de error
   const errorMessage = {
-    color: 'red',
-    margin: '10px 0 0',
+    color: "red",
+    margin: "10px 0 0",
   };
 
   useEffect(() => {
+    // Este useEffect no hace nada
   }, [logInMessage]);
 
+  // Maneja el inicio de sesión exitoso
   const handleLogIn = (user) => {
     sessionStorage.setItem("isLoggedIn", true);
     sessionStorage.setItem("username", user);
     sessionStorage.setItem("isRestricted", false);
   };
 
+  // Muestra o esconde la contraseña
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
+  // Maneja las credenciales de inicio de sesión
   const logCredentials = (event) => {
     event.preventDefault();
     if (username === "Roger" && password === "123") {
-      setLoginMessage('');
+      setLoginMessage("");
       sessionStorage.setItem("logInTries", 0);
       handleLogIn(username);
-      setRedirect('/');
+      setRedirect("/");
     } else {
       const tries = loginTries + 1;
       setLoginTries(tries);
       if (tries >= 3) {
-        sessionStorage.setItem('isRestricted', true);
-        setRedirect('/restricted')
+        sessionStorage.setItem("isRestricted", true);
+        setRedirect("/restricted");
       }
       setLoginMessage("Usuario y/o contraseña incorrecta\n");
     }
   };
 
-  if(redirect){
-    return <Navigate to={redirect} replace/>
+  // Redirige a la página correspondiente después del inicio de sesión
+  if (redirect) {
+    return <Navigate to={redirect} replace />;
   }
 
   return (
+    // Componente de la pantalla de inicio de sesión
     <div className="background">
       <Card className="logIn">
         <form onSubmit={logCredentials}>
           <h1>Inicio de Sesión</h1>
           <TextField
+            // Campo para el usuario
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -92,6 +99,7 @@ const LogIn = () => {
           />
           <br />
           <TextField
+            // Campo para la contraseña
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -117,7 +125,9 @@ const LogIn = () => {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
+          {/* Muestra el mensaje de error si existe */}
           <p style={errorMessage}>{logInMessage}</p>
+          {/* Botón de inicio de sesión */}
           <SubmitButton message="Iniciar Sesión" />
         </form>
       </Card>
@@ -125,4 +135,5 @@ const LogIn = () => {
   );
 };
 
+// Exporta el componente LogIn para su uso en otros componentes de la aplicación
 export default LogIn;

@@ -10,6 +10,7 @@ import Presidents from './Menu/Presidents';
 import DateAndTime from './Menu/DateAndTime';
 
 const App = () => {
+  // Variables de sistema para el inicio de sesión y el acceso restringido
   if (!sessionStorage.getItem("logInTries")) {
     sessionStorage.setItem("logInTries", 0);
   }

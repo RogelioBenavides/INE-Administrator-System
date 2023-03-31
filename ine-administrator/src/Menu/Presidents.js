@@ -3,6 +3,25 @@ import RepublicList from "./RepublicList";
 import { useState } from "react";
 import PresidentList from "./PresidentList";
 
+function createPresident(users) {
+  fetch('http://localhost:3001/presidents', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(users),
+  })
+}
+
+function deletePresidents(code) {
+  fetch(`http://localhost:3001/presidents/${code}`, {
+    method: 'DELETE',
+  })
+    .then(response => {
+      return response.text();
+    })
+}
+
 // Clase que genera información de presidentes
 class Presidente {
   // Constructor que recibe la longitud de la contraseña
@@ -17,7 +36,7 @@ class Presidente {
   }
 
   // Método para generar información de presidentes
-  generador(stateCode, cantPresidentes) {
+  async generador(stateCode, cantPresidentes) {
     // Array para guardar la información de los presidentes
     const users = [];
 
@@ -43,14 +62,22 @@ class Presidente {
       // Si la contraseña cumple con las validaciones, se agrega la información del presidente al array
       if (this.validacion(password)) {
         users.push({
-          code: stateCode + i,
+          code: stateCode,
+          id: i,
           user: usuario,
           password: password,
         });
-      }
+      } else
+        i++;
     }
 
     // Se retorna el array con la información de los presidentes
+    try {
+      await deletePresidents(stateCode);
+      createPresident(users);
+    } catch (error) {
+      console.error('Error deleting presidents:', error);
+    }
     return users;
   }
 
@@ -70,15 +97,15 @@ class Presidente {
   }
 }
 
-
 // Componente de React que muestra la página principal de presidentes
 const Presidents = () => {
+
   // Estado para controlar si se deben mostrar los presidentes
   const [showPresidents, setShowPresidents] = useState(false);
   // Estado para controlar la opción seleccionada en la lista de estados
   const [option, setOption] = useState(1);
   // Estado para guardar la información de los presidentes
-  const [presidents, setPresidents] = useState();
+  const [presidents, setPresidents] = useState([]);
   // Instancia de la clase Presidente
   const PresidentGenerator = new Presidente(12);
 
@@ -88,21 +115,19 @@ const Presidents = () => {
   }
 
   // Función que se ejecuta al enviar el formulario
-  function submitedForm(event) {
+  async function submitedForm(event) {
     // Prevenir la acción por defecto del formulario
     event.preventDefault();
     // Generar la información de los presidentes
-    setPresidents(PresidentGenerator.generador(estados[option - 1].code, estados[option - 1].quantity));
-    // AQUÍ VA LA COPIA A LA BD
-    for (let index = 0; index < presidents.length; index++) {
-        console.log(presidents[index].code);
+    try {
+      const generatedPresidents = await PresidentGenerator.generador(
+        estados[option - 1].code,
+        estados[option - 1].quantity
+      );
+      setPresidents(generatedPresidents);
+    } catch (error) {
+      console.error("Error generating presidents:", error);
     }
-
-    //presidents es el arreglo
-
-
-
-
 
     // Mostrar la tabla de presidentes
     setShowPresidents(true);

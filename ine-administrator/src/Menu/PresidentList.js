@@ -6,7 +6,7 @@ const PresidentList = (props) => {
         // Se retorna una fila con los valores del item actual
         return (
             <tr key={index}>
-                <td>{item.code}</td>
+                <td>{item.code + item.id}</td>
                 <td>{item.user}</td>
                 <td>{item.password}</td>
             </tr>

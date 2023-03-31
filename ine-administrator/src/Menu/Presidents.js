@@ -70,6 +70,7 @@ class Presidente {
   }
 }
 
+
 // Componente de React que muestra la página principal de presidentes
 const Presidents = () => {
   // Estado para controlar si se deben mostrar los presidentes
@@ -91,12 +92,18 @@ const Presidents = () => {
     // Prevenir la acción por defecto del formulario
     event.preventDefault();
     // Generar la información de los presidentes
-    setPresidents(
-      PresidentGenerator.generador(
-        estados[option - 1].code,
-        estados[option - 1].quantity
-      )
-    );
+    setPresidents(PresidentGenerator.generador(estados[option - 1].code, estados[option - 1].quantity));
+    // AQUÍ VA LA COPIA A LA BD
+    for (let index = 0; index < presidents.length; index++) {
+        console.log(presidents[index].code);
+    }
+
+    //presidents es el arreglo
+
+
+
+
+
     // Mostrar la tabla de presidentes
     setShowPresidents(true);
   }

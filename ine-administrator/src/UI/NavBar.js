@@ -50,13 +50,10 @@ const NavBar = ({ activeReset, activeCandidates, activeUsers, activeDate }) => {
               Reseteo de Urnas
             </Nav.Link>
             <Nav.Link style={activeStyle(activeCandidates)} href="candidates">
-              Editar Candidatura
+              Candidaturas
             </Nav.Link>
             <Nav.Link style={activeStyle(activeUsers)} href="presidents">
               Generar Presidentes
-            </Nav.Link>
-            <Nav.Link style={activeStyle(activeDate)} href="date&time">
-              Fecha y Hora
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

@@ -7,7 +7,6 @@ import Main from "./Menu/Main";
 import ProtectedRestricted from "./Log/ProtectedRestricted";
 import Candidates from "./Menu/Candidates";
 import Presidents from "./Menu/Presidents";
-import DateAndTime from "./Menu/DateAndTime";
 
 // La función App se utiliza como componente principal que contiene la navegación entre páginas y la protección de rutas.
 const App = () => {
@@ -39,8 +38,6 @@ const App = () => {
             <Route path="/candidates" element={<Candidates />} />
             {/* Se define la ruta para la página de presidentes */}
             <Route path="/presidents" element={<Presidents />} />
-            {/* Se define la ruta para la página de fecha y hora */}
-            <Route path="/date&time" element={<DateAndTime />} />
           </Route>
           <Route />
         </Route>

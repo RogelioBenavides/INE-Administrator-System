@@ -46,21 +46,34 @@ const LogIn = () => {
   };
 
   // Maneja las credenciales de inicio de sesión
-  const logCredentials = (event) => {
+  const logCredentials = async (event) => {
     event.preventDefault();
-    if (username === "Roger" && password === "123") {
-      setLoginMessage("");
-      sessionStorage.setItem("logInTries", 0);
-      handleLogIn(username);
-      setRedirect("/");
-    } else {
-      const tries = loginTries + 1;
-      setLoginTries(tries);
-      if (tries >= 3) {
-        sessionStorage.setItem("isRestricted", true);
-        setRedirect("/restricted");
+    try {
+      const response = await fetch("http://localhost:3001/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setLoginMessage("");
+        sessionStorage.setItem("logInTries", 0);
+        handleLogIn(username);
+        setRedirect("/");
+      } else {
+        const tries = loginTries + 1;
+        setLoginTries(tries);
+        if (tries >= 3) {
+          sessionStorage.setItem("isRestricted", true);
+          setRedirect("/restricted");
+        }
+        setLoginMessage("Usuario y/o contraseña incorrecta\n");
       }
-      setLoginMessage("Usuario y/o contraseña incorrecta\n");
+    } catch (error) {
+      console.error("Error while logging in:", error);
     }
   };
 

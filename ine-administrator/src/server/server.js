@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3001;
 
-const { insertPresidents, deletePresidents } = require('./connection');
+const { insertPresidents, deletePresidents, getAdministrators } = require('./connection');
 
 app.use(express.json());
 app.use(function (req, res, next) {
@@ -12,6 +12,33 @@ app.use(function (req, res, next) {
   next();
 });
 
+// Administrators
+app.get('/administrators', async (req, res) => {
+  try {
+    const administrators = await getAdministrators();
+    res.status(200).json(administrators);
+  } catch (error) {
+    console.error('Error in getAdministrators:', error);
+    res.status(500).send(error);
+  }
+});
+
+app.post('/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const administrators = await getAdministrators(username, password);
+    if (administrators.length > 0) {
+      res.status(200).json({ success: true, user: administrators[0] });
+    } else {
+      res.status(200).json({ success: false });
+    }
+  } catch (error) {
+    console.error('Error in getAdministrators:', error);
+    res.status(500).send(error);
+  }
+});
+
+// Presidents
 app.post('/presidents', async (req, res) => {
   console.log('Received data:', req.body);
   try {

@@ -1,10 +1,12 @@
+require("dotenv").config();
+
 const Pool = require("pg").Pool;
 const pool = new Pool({
-  user: process.env.USER,
-  host: process.env.HOST,
-  database: process.env.DATABASE,
-  password: process.env.PASSWORD,
-  port: process.env.PORT,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
 //Administrators
@@ -15,12 +17,42 @@ const getAdministrators = (user, password) => {
       [user, password],
       (error, results) => {
         if (error) {
+          console.error('Error in getAdministrators query:', error);
+          console.error('Query parameters:', [user, password]);
           reject(error);
         } else {
           resolve(results.rows);
         }
       }
     );
+  });
+};
+
+//Ballot Boxes
+const getBallotBoxes = () => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "SELECT code, id, location, totalvotes, votes FROM ballotboxes",
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.rows);
+        }
+      }
+    );
+  });
+};
+
+const resetVotes = () => {
+  return new Promise((resolve, reject) => {
+    pool.query("CALL reset_votes()", (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve("Votes reset successfully");
+      }
+    });
   });
 };
 
@@ -59,7 +91,9 @@ const deletePresidents = (code) => {
 };
 
 module.exports = {
+  getAdministrators,
+  getBallotBoxes,
+  resetVotes,
   insertPresidents,
   deletePresidents,
-  getAdministrators,
 };

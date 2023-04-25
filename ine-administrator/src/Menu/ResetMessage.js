@@ -1,6 +1,7 @@
 import PrimaryButton from "../UI/PrimaryButton";
 import SecondaryButton from "../UI/SecondaryButton";
 import { Container, Row, Col } from "react-bootstrap";
+import { useCallback } from "react";
 
 const ResetMessage = (props) => {
   // Define un estilo para el contenedor del mensaje
@@ -20,6 +21,32 @@ const ResetMessage = (props) => {
     borderRadius: "50px",
     maxWidth: "70%",
   };
+
+  const handleConfirmClick = useCallback(async () => {
+    try {
+      const response = await fetch("/reset_votes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (response.ok) {
+        // Handle success case
+        console.log("Votes reset successfully");
+        props.fetchData(); 
+      } else {
+        // Handle error case
+        console.error("Error resetting votes");
+      }
+    } catch (error) {
+      console.error("Error resetting votes:", error);
+    }
+  
+    if (props.onClick) {
+      props.onClick();
+    }
+  }, [props]);
 
   // Renderiza el mensaje con los botones para cancelar o confirmar
   return (
@@ -41,10 +68,7 @@ const ResetMessage = (props) => {
           className="d-flex flex-row mb-3 align-items-center justify-content-center"
         >
           {/* Botón para confirmar */}
-          <PrimaryButton
-            message="Confirmar"
-            onClick={props.onClick}
-          ></PrimaryButton>
+          <PrimaryButton message="Confirmar" onClick={handleConfirmClick}></PrimaryButton>
         </Col>
       </Row>
     </Container>

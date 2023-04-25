@@ -2,12 +2,28 @@ import { Container, Row, Col } from "react-bootstrap";
 import NavBar from "../UI/NavBar";
 import PrimaryButton from "../UI/PrimaryButton";
 import BallotTable from "./BallotTable";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ResetMessage from "./ResetMessage";
+import axios from "axios";
 
 const Reset = () => {
   // Use State hook to control the visibility of the reset message component
   const [showResetBallots, setShowResetBallots] = useState(false);
+
+  const [ballotBoxes, setBallotBoxes] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/ballotboxes');
+      setBallotBoxes(response.data);
+    } catch (error) {
+      console.error('Error fetching ballot boxes:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   // Function to handle the click event on the reset button
   const handleButtonClick = () => {
@@ -45,11 +61,11 @@ const Reset = () => {
           </Col>
         </Row>
         {/* Render the BallotTable component */}
-        <BallotTable />
+        <BallotTable ballotBoxes={ballotBoxes} fetchData={fetchData} />
       </Container>
       {/* Conditionally render the ResetMessage component based on the showResetBallots state */}
       {showResetBallots ? (
-        <ResetMessage onClick={handleButtonClick}>
+        <ResetMessage onClick={handleButtonClick} fetchData={fetchData} >
           <h1 style={{ textAlign: "center" }}>
             Seguro que quieres resetear los votos de <strong>todas</strong> las
             urnas?

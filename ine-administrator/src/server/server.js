@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3001;
 
-const { insertPresidents, deletePresidents, getAdministrators } = require('./connection');
+const { getAdministrators, getBallotBoxes, resetVotes, insertPresidents, deletePresidents } = require('./connection');
 
 app.use(express.json());
 app.use(function (req, res, next) {
@@ -23,6 +23,28 @@ app.get('/administrators', async (req, res) => {
   }
 });
 
+//Ballot Boxes
+app.get('/ballotboxes', async (req, res) => {
+  try {
+    const ballotBoxes = await getBallotBoxes();
+    res.status(200).json(ballotBoxes);
+  } catch (error) {
+    console.error('Error in getBallotBoxes:', error);
+    res.status(500).send(error);
+  }
+});
+
+app.post("/reset_votes", async (req, res) => {
+  try {
+    await resetVotes();
+    res.status(200).send("Votes reset successfully");
+  } catch (error) {
+    console.error("Error in resetVotes:", error);
+    res.status(500).send(error);
+  }
+});
+
+//Administrators
 app.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;

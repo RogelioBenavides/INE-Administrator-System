@@ -1,111 +1,32 @@
-import Table from "react-bootstrap/Table";
-import { useState, useEffect } from "react";
-// La función BallotTable se utiliza como componente para crear una tabla de votación.
-const BallotTable = () => {
+import { useEffect } from "react";
+import { Table } from "react-bootstrap";
 
-  // Se crea un arreglo de datos de ejemplo.
-  const data = [
-    {
-      id: "TAM6132",
-      location:
-        "Tamaulipas\nDistrito Federal: 6\nDistrito Local: 3\nSección: 2",
-      votes: 750,
-      registeredVotes: 710,
-      status: "Activa",
-    },
-    {
-      id: "TAM6132",
-      location:
-        "Tamaulipas\nDistrito Federal: 6\nDistrito Local: 3\nSección: 2",
-      votes: 750,
-      registeredVotes: 710,
-      status: "Activa",
-    },
-    {
-      id: "TAM6132",
-      location:
-        "Tamaulipas\nDistrito Federal: 6\nDistrito Local: 3\nSección: 2",
-      votes: 750,
-      registeredVotes: 710,
-      status: "Activa",
-    },
-    {
-      id: "TAM6132",
-      location:
-        "Tamaulipas\nDistrito Federal: 6\nDistrito Local: 3\nSección: 2",
-      votes: 750,
-      registeredVotes: 710,
-      status: "Activa",
-    },
-    {
-      id: "TAM6132",
-      location:
-        "Tamaulipas\nDistrito Federal: 6\nDistrito Local: 3\nSección: 2",
-      votes: 750,
-      registeredVotes: 710,
-      status: "Activa",
-    },
-    {
-      id: "TAM6132",
-      location:
-        "Tamaulipas\nDistrito Federal: 6\nDistrito Local: 3\nSección: 2",
-      votes: 750,
-      registeredVotes: 710,
-      status: "Activa",
-    },
-    {
-      id: "TAM6132",
-      location:
-        "Tamaulipas\nDistrito Federal: 6\nDistrito Local: 3\nSección: 2",
-      votes: 750,
-      registeredVotes: 710,
-      status: "Activa",
-    },
-    {
-      id: "TAM6132",
-      location:
-        "Tamaulipas\nDistrito Federal: 6\nDistrito Local: 3\nSección: 2",
-      votes: 750,
-      registeredVotes: 710,
-      status: "Activa",
-    },
-    {
-      id: "TAM6132",
-      location:
-        "Tamaulipas\nDistrito Federal: 6\nDistrito Local: 3\nSección: 2",
-      votes: 750,
-      registeredVotes: 710,
-      status: "Activa",
-    },
-    {
-      id: "TAM6132",
-      location:
-        "Tamaulipas\nDistrito Federal: 6\nDistrito Local: 3\nSección: 2",
-      votes: 750,
-      registeredVotes: 710,
-      status: "Activa",
-    },
-  ];
+const BallotTable = (props) => {
+  useEffect(() => {
+    props.fetchData();
+  }, [props]);
 
-  // Se crean filas para la tabla a partir de los datos.
-  const rows = data.map((item, index) => {
+  const rows = props.ballotBoxes.map((item, index) => {
     return (
       <tr key={index}>
-        <td>{item.id}</td>
+        <td>{item.code + item.id}</td>
         <td>
-          {/* Se separa la ubicación por líneas y se crean elementos div para cada línea */}
-          {item.location.split("\n").map((line, index) => {
-            return <div key={index}>{line}</div>;
-          })}
+          {item.location.split('\\n').map((line, i) => (
+            <p key={i} style={{ margin: 0 }}>
+              {line}
+            </p>
+          ))}
         </td>
+        <td>{item.totalvotes}</td>
         <td>{item.votes}</td>
-        <td>{item.registeredVotes}</td>
-        <td>{item.status}</td>
       </tr>
     );
   });
+  
+  
+  
+
   return (
-    // Se utiliza la librería react-bootstrap para crear la tabla con estilos.
     <Table striped hover bordered responsive className="rounded-4">
       <thead>
         <tr>
@@ -113,7 +34,6 @@ const BallotTable = () => {
           <th>Ubicación</th>
           <th>Votos totales</th>
           <th>Votos registrados</th>
-          <th>Estatus</th>
         </tr>
       </thead>
       <tbody>{rows}</tbody>
@@ -121,5 +41,4 @@ const BallotTable = () => {
   );
 };
 
-// Se exporta la función BallotTable como un componente.
 export default BallotTable;

@@ -170,7 +170,7 @@ const Presidents = () => {
   ];
 
   return (
-    <div>
+    <div style={{ marginBottom: "100px" }}>
       {/* Barra de navegación */}
       <NavBar activeUsers="true" />
       <h1 style={{ textAlign: "center", margin: "50px" }}>

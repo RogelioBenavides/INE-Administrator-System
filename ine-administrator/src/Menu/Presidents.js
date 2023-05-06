@@ -4,22 +4,21 @@ import { useState } from "react";
 import PresidentList from "./PresidentList";
 
 function createPresident(users) {
-  fetch('http://localhost:3001/presidents', {
-    method: 'POST',
+  fetch("http://localhost:3001/presidents", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(users),
-  })
+  });
 }
 
 function deletePresidents(code) {
   fetch(`http://localhost:3001/presidents/${code}`, {
-    method: 'DELETE',
-  })
-    .then(response => {
-      return response.text();
-    })
+    method: "DELETE",
+  }).then((response) => {
+    return response.text();
+  });
 }
 
 // Clase que genera información de presidentes
@@ -67,18 +66,17 @@ class Presidente {
           user: usuario,
           password: password,
         });
-      } else
-        i++;
+      } else i++;
     }
 
     // Se retorna el array con la información de los presidentes
     try {
-      await deletePresidents(stateCode);
+      deletePresidents(stateCode);
       createPresident(users);
+      return users;
     } catch (error) {
-      console.error('Error deleting presidents:', error);
+      console.error("Error deleting presidents:", error);
     }
-    return users;
   }
 
   // Método para validar la contraseña
@@ -99,74 +97,62 @@ class Presidente {
 
 // Componente de React que muestra la página principal de presidentes
 const Presidents = () => {
-
   // Estado para controlar si se deben mostrar los presidentes
   const [showPresidents, setShowPresidents] = useState(false);
-  // Estado para controlar la opción seleccionada en la lista de estados
-  const [option, setOption] = useState(1);
   // Estado para guardar la información de los presidentes
   const [presidents, setPresidents] = useState([]);
   // Instancia de la clase Presidente
   const PresidentGenerator = new Presidente(12);
 
-  // Función para actualizar el estado "option" cuando cambia el estado en el componente hijo "RepublicList"
-  function handleChildStateChange(childState) {
-    setOption(childState);
-  }
-
   // Función que se ejecuta al enviar el formulario
-  async function submitedForm(event) {
-    // Prevenir la acción por defecto del formulario
-    event.preventDefault();
-    // Generar la información de los presidentes
+  async function submitedForm(selectedOption, ballotBoxQuantity) {
     try {
       const generatedPresidents = await PresidentGenerator.generador(
-        estados[option - 1].code,
-        estados[option - 1].quantity
+        estados[selectedOption - 1].code,
+        ballotBoxQuantity
       );
       setPresidents(generatedPresidents);
     } catch (error) {
       console.error("Error generating presidents:", error);
     }
 
-    // Mostrar la tabla de presidentes
     setShowPresidents(true);
   }
 
   // Array con la información de los estados
   const estados = [
-    { id: 1, code: "AGS", city: "Aguascalientes", quantity: 186 },
-    { id: 2, code: "BC", city: "Baja California", quantity: 510 },
-    { id: 3, code: "BCS", city: "Baja California Sur", quantity: 124 },
-    { id: 4, code: "CHI", city: "Chihuahua", quantity: 736 },
-    { id: 5, code: "CHS", city: "Chiapas", quantity: 136 },
-    { id: 6, code: "CMP", city: "Campeche", quantity: 168 },
-    { id: 7, code: "CMX", city: "Ciudad de Mexico", quantity: 1326 },
-    { id: 8, code: "COA", city: "Coahuila", quantity: 446 },
-    { id: 9, code: "COL", city: "Colima", quantity: 146 },
-    { id: 10, code: "DGO", city: "Durango", quantity: 375 },
-    { id: 11, code: "GRO", city: "Guerrero", quantity: 889 },
-    { id: 12, code: "GTO", city: "Guanajuato", quantity: 114 },
-    { id: 13, code: "HGO", city: "Hidalgo", quantity: 456 },
-    { id: 14, code: "JAL", city: "Jalisco", quantity: 194 },
-    { id: 15, code: "MCH", city: "Michoacan", quantity: 107 },
-    { id: 16, code: "MEX", city: "Estado de Mexico", quantity: 373 },
-    { id: 17, code: "MOR", city: "Morelos", quantity: 375 },
-    { id: 18, code: "NAY", city: "Nayarit", quantity: 196 },
-    { id: 19, code: "NL", city: "Nuevo Leon", quantity: 951 },
-    { id: 20, code: "OAX", city: "Oaxaca", quantity: 158 },
-    { id: 21, code: "PUE", city: "Puebla", quantity: 194 },
-    { id: 22, code: "QR", city: "Quintana Roo", quantity: 217 },
-    { id: 23, code: "QRO", city: "Queretaro", quantity: 310 },
-    { id: 24, code: "SIN", city: "Sinaloa", quantity: 527 },
-    { id: 25, code: "SLP", city: "San Luis Potosi", quantity: 686 },
-    { id: 26, code: "SON", city: "Sonora", quantity: 522 },
-    { id: 27, code: "TAB", city: "Tabasco", quantity: 403 },
-    { id: 28, code: "TLX", city: "Tlaxcala", quantity: 192 },
-    { id: 29, code: "TMS", city: "Tamaulipas", quantity: 727 },
-    { id: 30, code: "VER", city: "Veracruz", quantity: 261 },
-    { id: 31, code: "YUC", city: "Yucatan", quantity: 346 },
-    { id: 32, code: "ZAC", city: "Zacatecas", quantity: 339 },
+    { id: 1, code: "AGS", city: "Aguascalientes" },
+    { id: 2, code: "BC", city: "Baja California" },
+    { id: 3, code: "BCS", city: "Baja California Sur" },
+    { id: 4, code: "CHI", city: "Chihuahua" },
+    { id: 5, code: "CHS", city: "Chiapas" },
+    { id: 6, code: "CMP", city: "Campeche" },
+    { id: 7, code: "CMX", city: "Ciudad de Mexico" },
+    { id: 8, code: "COA", city: "Coahuila" },
+    { id: 9, code: "COL", city: "Colima" },
+    { id: 10, code: "DGO", city: "Durango" },
+    { id: 11, code: "GRO", city: "Guerrero" },
+    { id: 12, code: "GTO", city: "Guanajuato" },
+    { id: 13, code: "HGO", city: "Hidalgo" },
+    { id: 14, code: "JAL", city: "Jalisco" },
+    { id: 15, code: "MCH", city: "Michoacan" },
+    { id: 16, code: "MEX", city: "Estado de Mexico" },
+    { id: 17, code: "MOR", city: "Morelos" },
+    { id: 18, code: "NAY", city: "Nayarit" },
+    { id: 19, code: "NL", city: "Nuevo Leon" },
+    { id: 20, code: "OAX", city: "Oaxaca" },
+    { id: 21, code: "PUE", city: "Puebla" },
+    { id: 22, code: "QR", city: "Quintana Roo" },
+    { id: 23, code: "QRO", city: "Queretaro" },
+    { id: 24, code: "SIN", city: "Sinaloa" },
+    { id: 25, code: "SLP", city: "San Luis Potosi" },
+    { id: 26, code: "SON", city: "Sonora" },
+    { id: 27, code: "TAB", city: "Tabasco" },
+    { id: 28, code: "TLX", city: "Tlaxcala" },
+    { id: 29, code: "TMS", city: "Tamaulipas" },
+    { id: 30, code: "VER", city: "Veracruz" },
+    { id: 31, code: "YUC", city: "Yucatan" },
+    { id: 32, code: "ZAC", city: "Zacatecas" },
   ];
 
   return (
@@ -180,7 +166,6 @@ const Presidents = () => {
       <RepublicList
         data={estados}
         onClick={submitedForm}
-        onChildStateChange={handleChildStateChange}
       />
       {/* Tabla de presidentes */}
       {showPresidents ? (

@@ -2,11 +2,11 @@ require("dotenv").config();
 
 const Pool = require("pg").Pool;
 const pool = new Pool({
-  user: 'administrator',
-  host: 'localhost',
-  database: 'ineadministrator',
-  password: '123',
-  port: '5432',
+  user: "administrator",
+  host: "localhost",
+  database: "ineadministrator",
+  password: "123",
+  port: "5432",
 });
 
 //Administrators
@@ -17,8 +17,8 @@ const getAdministrators = (user, password) => {
       [user, password],
       (error, results) => {
         if (error) {
-          console.error('Error in getAdministrators query:', error);
-          console.error('Query parameters:', [user, password]);
+          console.error("Error in getAdministrators query:", error);
+          console.error("Query parameters:", [user, password]);
           reject(error);
         } else {
           resolve(results.rows);
@@ -32,7 +32,7 @@ const getAdministrators = (user, password) => {
 const getBallotBoxes = () => {
   return new Promise((resolve, reject) => {
     pool.query(
-      "SELECT code, id, location, totalvotes, votes FROM ballotboxes",
+      "SELECT code, id, totalvotes, votes FROM ballotboxes",
       (error, results) => {
         if (error) {
           reject(error);
@@ -58,32 +58,47 @@ const resetVotes = () => {
 
 //Presidents
 const insertPresidents = async (presidents) => {
-  const queryPromises = presidents.map((president) => {
-    const { code, id, user, password } = president;
-    return pool.query(
-      "INSERT INTO presidents (code, id, username, password) VALUES ($1, $2, $3, $4)",
-      [code, id, user, password]
-    );
-  });
-
   try {
-    await Promise.all(queryPromises);
-    console.log("All presidents inserted");
+    // Get a single client from the pool
+    const client = await pool.connect();
+
+    try {
+      // Start a transaction
+      await client.query("BEGIN");
+
+      // Insert each president using the same client
+      for (const president of presidents) {
+        await client.query(
+          "INSERT INTO ballotboxes (code, id, totalvotes, votes, president, password) VALUES ($1, $2, $3, $4, $5, $6)",
+          [president.code, president.id, 0, 0, president.user, president.password]
+        );
+      }
+
+      // Commit the transaction
+      await client.query("COMMIT");
+    } catch (error) {
+      // Rollback the transaction in case of errors
+      await client.query("ROLLBACK");
+      console.error("Error inserting presidents:", error);
+    } finally {
+      // Release the client back to the pool
+      client.release();
+    }
   } catch (error) {
-    console.error("Error inserting presidents:", error);
+    console.error("Error acquiring client:", error);
   }
 };
 
 const deletePresidents = (code) => {
   return new Promise(function (resolve, reject) {
     pool.query(
-      "DELETE FROM presidents WHERE code = $1",
+      "DELETE FROM ballotboxes WHERE code = $1",
       [code],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          resolve("Presidents deleted successfully");
+          resolve("Ballot Boxes deleted successfully");
         }
       }
     );

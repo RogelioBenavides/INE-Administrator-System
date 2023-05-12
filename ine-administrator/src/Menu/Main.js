@@ -36,7 +36,7 @@ const Main = () => {
           </div>
           <div className="col-lg-6">
             {/* Sección de edición de candidatos */}
-            <Option>
+            <Option route="/candidates">
               {/* SVG para ilustrar la opción de edición de candidatos */}
               <SVG
                 viewBox="0 0 141 141"

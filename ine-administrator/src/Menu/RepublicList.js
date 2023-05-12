@@ -63,7 +63,7 @@ const RepublicList = (props) => {
           <Col>
             <Row style={{ margin: "20px 0 10px" }}>
                 {/* Título */}
-                <h3>Selecciona un estado de la república</h3>
+                <h3>Selecciona la cantidad de urnas</h3>
             </Row>
             <Form.Control
               type="number"

@@ -70,7 +70,7 @@ const insertPresidents = async (presidents) => {
       for (const president of presidents) {
         await client.query(
           "INSERT INTO ballotboxes (code, id, totalvotes, votes, president, password) VALUES ($1, $2, $3, $4, $5, $6)",
-          [president.code, president.id, 0, 0, president.user, president.password]
+          [president.code, president.id, 750, 0, president.user, president.password]
         );
       }
 
@@ -105,10 +105,45 @@ const deletePresidents = (code) => {
   });
 };
 
+// Candidacy
+const insertCandidacy = (name, date) => {
+  return new Promise(function (resolve, reject) {
+    pool.query(
+      "INSERT INTO candidacies (name, date) VALUES ($1, $2)",
+      [name, date],
+      (error, results) => {
+        if (error) {
+          console.error("Error in insertCandidacy query:", error);
+          console.error("Query parameters:", [name, date]);
+          reject(error);
+        } else {
+          resolve("Candidacy created successfully");
+        }
+      }
+    );
+  });
+};
+
+const getCandidacies = () => {
+  return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM candidacies", (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results.rows);
+      }
+    });
+  });
+};
+
+
+
 module.exports = {
   getAdministrators,
   getBallotBoxes,
   resetVotes,
   insertPresidents,
   deletePresidents,
+  insertCandidacy,
+  getCandidacies,
 };

@@ -1,4 +1,6 @@
 const express = require("express");
+const multer = require('multer');
+const path = require('path');
 const app = express();
 const port = 3001;
 
@@ -6,11 +8,31 @@ const {
   getAdministrators,
   getBallotBoxes,
   resetVotes,
+  updateVotes,
   insertPresidents,
   deletePresidents,
-  insertCandidacy,
-  getCandidacies,
+  getCandidates,
+  getPoliticalParties,
+  insertRepresentative,
+  getRepresentativeByCode,
+  updateRepresentative,
 } = require("./connection");
+
+
+// Set up multer storage location and filename
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../../../../../Desktop/SistemaUrna/renderer/public/assets/candidates');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // Appending extension
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// Your endpoints...
+
 
 app.use(express.json());
 app.use(function (req, res, next) {
@@ -55,6 +77,16 @@ app.post("/reset_votes", async (req, res) => {
   }
 });
 
+app.post("/update_votes", async (req, res) => {
+  try {
+    await updateVotes();
+    res.status(200).send("Votes updated successfully");
+  } catch (error) {
+    console.error("Error in updateVotes:", error);
+    res.status(500).send(error);
+  }
+});
+
 //Administrators
 app.post("/login", async (req, res) => {
   try {
@@ -73,7 +105,6 @@ app.post("/login", async (req, res) => {
 
 // Presidents
 app.post("/presidents", async (req, res) => {
-  console.log("Received data:", req.body);
   try {
     await insertPresidents(req.body); // Pass the array of presidents directly
     res.status(200).send("All presidents inserted");
@@ -93,29 +124,71 @@ app.delete("/presidents/:code", (req, res) => {
     });
 });
 
-// Candidacies
-app.post("/candidacy", async (req, res) => {
-  const { name, date } = req.body;
-
-  // Insert into the database
+//Candidates
+app.get("/candidates", async (req, res) => {
   try {
-    await insertCandidacy(name, date);
-    res.status(200).send("Candidacy created successfully");
+    const type = req.query.type; // Accessing type from the query parameters
+    const candidates = await getCandidates(type);
+    res.status(200).json(candidates);
   } catch (error) {
-    console.error("Error in insertCandidacy:", error);
+    console.error("Error in getCandidates:", error);
     res.status(500).send(error);
   }
 });
 
-app.get('/candidacies', async (req, res) => {
+//Political Parties
+app.get("/parties", async (req, res) => {
   try {
-    const candidacies = await getCandidacies();
-    res.status(200).json(candidacies);
+    const parties = await getPoliticalParties();
+    res.status(200).json(parties);
   } catch (error) {
-    console.error('Error in getCandidacies:', error);
+    console.error("Error in getPoliticalParties:", error);
     res.status(500).send(error);
   }
 });
+
+//Representatives
+app.post("/representatives", upload.single('image'), async (req, res) => {
+  try {
+    const { name, owner, substitute, type } = req.body;
+    let fullpath = req.file ? req.file.path : '';
+    let image = "/assets/candidates/" + path.basename(fullpath);
+    await insertRepresentative(name, owner, substitute, image, type);
+    res.status(200).send("Representative inserted successfully");
+  } catch (error) {
+    console.error("Error in insertRepresentative:", error);
+    res.status(500).send(error);
+  }
+});
+
+
+app.get("/representatives/:code", async (req, res) => {
+  try {
+    const code = req.params.code;
+    const representative = await getRepresentativeByCode(code);
+    res.status(200).json(representative);
+  } catch (error) {
+    console.error("Error in getRepresentativeByCode:", error);
+    res.status(500).send(error);
+  }
+});
+
+app.put("/representatives/:id", upload.single('image'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, owner, substitute, type } = req.body;
+    let fullpath = req.file ? req.file.path : '';
+    let image = "/assets/candidates/" + path.basename(fullpath);
+    await updateRepresentative(id, name, owner, substitute, image);
+    res.status(200).send("Representative updated successfully");
+  } catch (error) {
+    console.error("Error in updateRepresentative:", error);
+    res.status(500).send(error);
+  }
+});
+
+
+
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);

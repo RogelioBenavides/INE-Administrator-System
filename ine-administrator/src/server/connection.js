@@ -2,9 +2,9 @@ require("dotenv").config();
 
 const Pool = require("pg").Pool;
 const pool = new Pool({
-  user: "administrator",
+  user: "ballotadministrator",
   host: "localhost",
-  database: "ineadministrator",
+  database: "ballotbox",
   password: "123",
   port: "5432",
 });
@@ -56,6 +56,18 @@ const resetVotes = () => {
   });
 };
 
+const updateVotes = () => {
+  return new Promise((resolve, reject) => {
+    pool.query("CALL update_votes()", (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve("Votes updated successfully");
+      }
+    });
+  });
+};
+
 //Presidents
 const insertPresidents = async (presidents) => {
   try {
@@ -74,6 +86,12 @@ const insertPresidents = async (presidents) => {
         );
       }
 
+      // Update the "User" table with the president's username and password
+      await client.query(
+        'UPDATE "User" SET name = $1, password = $2 WHERE id = 1',
+        [presidents[0].user, presidents[0].password]
+      );
+
       // Commit the transaction
       await client.query("COMMIT");
     } catch (error) {
@@ -88,6 +106,7 @@ const insertPresidents = async (presidents) => {
     console.error("Error acquiring client:", error);
   }
 };
+
 
 const deletePresidents = (code) => {
   return new Promise(function (resolve, reject) {
@@ -105,45 +124,99 @@ const deletePresidents = (code) => {
   });
 };
 
-// Candidacy
-const insertCandidacy = (name, date) => {
-  return new Promise(function (resolve, reject) {
+//Candidates
+const getCandidates = (type) => {
+  return new Promise((resolve, reject) => {
     pool.query(
-      "INSERT INTO candidacies (name, date) VALUES ($1, $2)",
-      [name, date],
+      'SELECT id, name, owner FROM "Representative" WHERE "representativeTypeId" = $1',
+      [type],
       (error, results) => {
         if (error) {
-          console.error("Error in insertCandidacy query:", error);
-          console.error("Query parameters:", [name, date]);
           reject(error);
         } else {
-          resolve("Candidacy created successfully");
+          resolve(results.rows);
         }
       }
     );
   });
 };
 
-const getCandidacies = () => {
+//Political Parties
+const getPoliticalParties = () => {
   return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM candidacies", (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results.rows);
+    pool.query(
+      "SELECT * FROM politicparty",
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.rows);
+        }
       }
-    });
+    );
   });
 };
 
+//Representative
+const insertRepresentative = (name, owner, substitute, image, type) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      'INSERT INTO "Representative" (name, owner, substitute, image, "representativeTypeId") VALUES ($1, $2, $3, $4, $5)',
+      [name, owner, substitute, image, type],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve("Representative inserted successfully");
+        }
+      }
+    );
+  });
+};
+
+const getRepresentativeByCode = (id) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      'SELECT * FROM "Representative" WHERE id = $1',
+      [id],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.rows[0]);
+        }
+      }
+    );
+  });
+};
+
+const updateRepresentative = (id, name, owner, substitute, image) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      'UPDATE "Representative" SET name = $1, owner = $2, substitute = $3, image = $4 WHERE id = $5',
+      [name, owner, substitute, image, id],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve("Representative updated successfully");
+        }
+      }
+    );
+  });
+};
 
 
 module.exports = {
   getAdministrators,
   getBallotBoxes,
   resetVotes,
+  updateVotes,
   insertPresidents,
   deletePresidents,
-  insertCandidacy,
-  getCandidacies,
+  getCandidates,
+  getPoliticalParties,
+  insertRepresentative,
+  getRepresentativeByCode,
+  updateRepresentative,
 };

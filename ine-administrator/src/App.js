@@ -6,7 +6,7 @@ import LogIn from "./LogIn";
 import Main from "./Menu/Main";
 import ProtectedRestricted from "./Log/ProtectedRestricted";
 import Candidates from "./Menu/Candidates";
-import CreateCandidacy from "./Menu/CreateCandidacy";
+import CreateCandidate from "./Menu/CreateCandidate";
 import Presidents from "./Menu/Presidents";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -41,7 +41,7 @@ const App = () => {
               {/* Se define la ruta para la página de candidatos */}
               <Route path="/candidates" element={<Candidates />} />
               {/* Se define la ruta para la página de candidatos */}
-              <Route path="/candidacy" element={<CreateCandidacy />} />
+              <Route path="/create-candidate/:option" element={<CreateCandidate />} />
               {/* Se define la ruta para la página de presidentes */}
               <Route path="/presidents" element={<Presidents />} />
             </Route>

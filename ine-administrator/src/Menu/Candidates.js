@@ -1,9 +1,11 @@
+import { useState, useEffect } from "react";
 import NavBar from "../UI/NavBar";
 import PrimaryButton from "../UI/PrimaryButton";
 import { Container, Row, Col } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
+import axios from "axios";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import EditCandidate from "./EditCandidate";
 
 const Candidates = () => {
   // Estilo para el contenedor
@@ -19,20 +21,39 @@ const Candidates = () => {
     maxWidth: "70%",
   };
 
-  const [candidacies, setCandidacies] = useState([]);
+  const candidacies = [
+    { id: 1, name: "Diputados Federales" },
+    { id: 2, name: "Diputados Locales" },
+    { id: 3, name: "Gobernatura" },
+  ];
+
+  const [selectedOption, setSelectedOption] = useState(0);
+  const [selectedCandidate, setSelectedCandidate] = useState(0);
+  const [showCandidates, setShowCandidates] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [candidates, setCandidates] = useState([]);
 
   useEffect(() => {
-    fetchCandidacies();
-  }, []);
+    axios
+      .get(`/candidates?type=${selectedOption}`)
+      .then((response) => {
+        setCandidates(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching candidates:", error);
+      });
+  }, [selectedOption]);
 
-  const fetchCandidacies = async () => {
-    try {
-      const response = await fetch("http://localhost:3001/candidacies");
-      const data = await response.json();
-      setCandidacies(data);
-    } catch (error) {
-      console.error("Error fetching candidacies:", error);
-    }
+  const handleOption = (event) => {
+    const value = event.target.value;
+    setSelectedOption(value);
+    setShowCandidates(value !== "0");
+  };
+  
+  const handleCandidateOption = (event) => {
+    const value = event.target.value;
+    setSelectedCandidate(value);
+    setShowEdit(value !== "0");
   };
 
   return (
@@ -40,7 +61,7 @@ const Candidates = () => {
       <NavBar activeCandidates="true" />
       <h1 style={{ textAlign: "center", margin: "50px" }}>Candidaturas</h1>
       <Container style={messageStyle}>
-        <Row style={{ margin: "0 0 20px" }}>
+        <Row style={{ margin: "0 0 10px" }}>
           {/* Título */}
           <h3>Selecciona la votación a editar</h3>
         </Row>
@@ -48,8 +69,8 @@ const Candidates = () => {
           <Row>
             <Col>
               {/* Selección de candidaturas */}
-              <Form.Select>
-                <option value="">Selecciona una candidatura</option>
+              <Form.Select onChange={handleOption}>
+                <option value="0">Selecciona una candidatura</option>
                 {candidacies.map((candidacy) => (
                   <option key={candidacy.id} value={candidacy.id}>
                     {candidacy.name}
@@ -58,24 +79,36 @@ const Candidates = () => {
               </Form.Select>
             </Col>
           </Row>
-          <Row style={{ marginTop: "20px" }}>
-            <Col className="d-flex justify-content-center">
-              {/* Botón de confirmación */}
-              <PrimaryButton message="Confirmar"></PrimaryButton>
-            </Col>
-          </Row>
         </Form>
-        <h3 style={{ marginTop: "50px" }}>
-          ¿Deseas crear una nueva candidatura?
-        </h3>
-        <Row>
-          <Col className="d-flex justify-content-center">
-            {/* Botón de confirmación */}
-            <Link to="/candidacy">
-              <PrimaryButton message="Crear"></PrimaryButton>
-            </Link>
-          </Col>
-        </Row>
+        {showCandidates ? (
+          <div style={{ margin: "20px 0px" }}>
+            <Row>
+              <Col className="col-12 col-sm-6">
+                <Row style={{ margin: "0 0 10px" }}>
+                  {/* Título */}
+                  <h3>Selecciona el candidato a editar</h3>
+                </Row>
+                <Form.Select onChange={handleCandidateOption}>
+                  <option value="0">Selecciona un candidato</option>
+                  {candidates.map((candidate) => (
+                    <option key={candidate.id} value={candidate.id}>
+                      {candidate.name + ", " + candidate.owner}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+              <Col className="col-12 col-sm-6">
+                <h3>Crear nuevo candidato</h3>
+                <Link to={`/create-candidate/${selectedOption}`}>
+                    <PrimaryButton message="Crear nuevo candidato"></PrimaryButton>
+                </Link>
+              </Col>
+            </Row>
+          </div>
+        ) : null}
+        {showEdit && showCandidates ? (
+          <EditCandidate id={selectedCandidate} option={selectedOption}/>
+        ) : null}
       </Container>
     </div>
   );

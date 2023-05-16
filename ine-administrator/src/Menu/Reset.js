@@ -21,6 +21,23 @@ const Reset = () => {
     }
   };
 
+  const updateVotes = async () => {
+    try {
+      await axios.post("http://localhost:3001/update_votes");
+      console.log("Votes updated successfully");
+    } catch (error) {
+      console.error("Error updating votes:", error);
+    }
+  };
+  
+  useEffect(() => {
+    // Call the updateVotes function every 10 seconds (adjust the interval as needed)
+    const interval = setInterval(updateVotes, 10000);
+  
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     fetchData();
   }, []);

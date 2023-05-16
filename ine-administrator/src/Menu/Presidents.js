@@ -3,8 +3,8 @@ import RepublicList from "./RepublicList";
 import { useState } from "react";
 import PresidentList from "./PresidentList";
 
-function createPresident(users) {
-  fetch("http://localhost:3001/presidents", {
+async function createPresident(users) {
+  await fetch("http://localhost:3001/presidents", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -13,8 +13,8 @@ function createPresident(users) {
   });
 }
 
-function deletePresidents(code) {
-  fetch(`http://localhost:3001/presidents/${code}`, {
+async function deletePresidents(code) {
+  await fetch(`http://localhost:3001/presidents/${code}`, {
     method: "DELETE",
   }).then((response) => {
     return response.text();
@@ -40,7 +40,7 @@ class Presidente {
     const users = [];
 
     // Bucle para generar información para todos los presidentes
-    for (let i = cantPresidentes; i > 0; i--) {
+    for (let i = 1; i <= cantPresidentes; i++) {
       let password = "",
         usuario = "";
 
@@ -66,12 +66,12 @@ class Presidente {
           user: usuario,
           password: password,
         });
-      } else i++;
+      } else i--;
     }
 
     // Se retorna el array con la información de los presidentes
     try {
-      deletePresidents(stateCode);
+      await deletePresidents(stateCode);
       createPresident(users);
       return users;
     } catch (error) {
